@@ -4,11 +4,28 @@
 
 @layer base {
   button,
-  input {
+  input,
+  textarea {
     @apply focus:outline-none;
   }
 }
+
 .pos-center {
   top: 50%;
   transform: translate(0, -50%);
+}
+
+.dropdown__btn[open]::before {
+  content: "";
+  @apply fixed top-0 left-0 w-screen h-screen z-40 cursor-default;
+}
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.blur {
+  filter: blur(1px);
 }
