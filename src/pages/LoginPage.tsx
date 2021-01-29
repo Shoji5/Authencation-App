@@ -1,15 +1,21 @@
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import Logo from "../images/devchallenges.svg";
-import GoogleIcon from "../images/Google.svg";
-import FacebookIcon from "../images/Facebook.svg";
-import TwitterIcon from "../images/Twitter.svg";
-import GithubIcon from "../images/Gihub.svg";
-import { FormEvent } from "react";
+import { FormEvent, useEffect } from "react";
+import { connect } from "react-redux";
+import { userLocalLogin } from "../stores/userReducer";
+import GoogleLogin from "../components/GoogleLogin";
+import FacebookLogin from "../components/FacebookLogin";
+import GithubLogin from "../components/GithubLogin";
 
-export default function LoginPage() {
+function LoginPage({ userLocalLogin, user }: any) {
+  const history = useHistory();
+  useEffect(() => {
+    if (user.uid) history.push("/");
+  });
+
   const onSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log("asdf");
+    userLocalLogin({ email: e.currentTarget.email.value, password: e.currentTarget.password.value });
   };
 
   return (
@@ -46,11 +52,10 @@ export default function LoginPage() {
           </button>
           <div className="flex flex-col items-center mt-3">
             <p className="text-sm">or continue with these social profile</p>
-            <div className="flex my-3">
-              <img className="mx-2" src={GoogleIcon} alt="" />
-              <img className="mx-2" src={FacebookIcon} alt="" />
-              <img className="mx-2" src={TwitterIcon} alt="" />
-              <img className="mx-2" src={GithubIcon} alt="" />
+            <div className="flex my-3 items-center">
+              <GoogleLogin />
+              <FacebookLogin />
+              <GithubLogin />
             </div>
             <p className="text-sm mt-2">
               Don’t have an account yet?{" "}
@@ -68,3 +73,9 @@ export default function LoginPage() {
     </div>
   );
 }
+
+const mapStateToProps = (state: any) => ({ user: state.user });
+
+const mapDispatchToProps = { userLocalLogin };
+
+export default connect(mapStateToProps, mapDispatchToProps)(LoginPage);

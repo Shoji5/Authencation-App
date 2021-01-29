@@ -1,7 +1,13 @@
-import { Link } from "react-router-dom";
+import { useEffect } from "react";
+import { connect } from "react-redux";
+import { Link, useHistory } from "react-router-dom";
 import Header from "../components/Header";
 
-export default function HomePage() {
+function HomePage({ user, isLoading }: any) {
+  const history = useHistory();
+  useEffect(() => {
+    if (!user.uid && !isLoading) history.push("/login");
+  });
   return (
     <>
       <Header />
@@ -27,44 +33,42 @@ export default function HomePage() {
                 <span className="sm:pl-10 self-center text-sm text-gray-350 font-medium">PHOTO</span>
               </div>
               <div className="flex sm:justify-start justify-end border-t border-gray-200">
-                <img
-                  className="w-16 h-16 my-2 object-cover rounded-lg"
-                  src="https://scontent.fvca1-1.fna.fbcdn.net/v/t1.0-9/133567601_424143602061327_5045347988406242295_n.jpg?_nc_cat=111&ccb=2&_nc_sid=b9115d&_nc_ohc=jT7ioMiTvIQAX8y3Pj3&_nc_ht=scontent.fvca1-1.fna&oh=88799419735935039394521363a39e74&oe=6012A53E"
-                  alt=""
-                />
+                <img className="w-16 h-16 my-2 object-cover rounded-lg" src={user.image} alt="" />
               </div>
               <div className="flex border-t border-gray-200 items-center">
                 <span className="sm:pl-10 text-sm text-gray-350 font-medium">NAME</span>
               </div>
               <div className="flex sm:justify-start justify-end border-t border-gray-200 items-center">
-                <span className="sm:pr-10 my-2 sm:text-lg">Xanthe Neal</span>
+                <span className="sm:pr-10 my-2 sm:text-lg">{user.name}</span>
               </div>
               <div className="flex border-t border-gray-200 items-center">
                 <span className="sm:pl-10 text-sm text-gray-350 font-medium">BIO</span>
               </div>
               <div className="flex sm:justify-start justify-end border-t border-gray-200 items-center">
-                <span className="sm:pr-10 my-2 sm:text-left text-right sm:text-lg">
-                  I am a software developer and a big fan of devchallenges...
-                </span>
+                <span className="sm:pr-10 my-2 sm:text-left text-right sm:text-lg">{user.bio}</span>
               </div>
               <div className="flex border-t border-gray-200 items-center">
                 <span className="sm:pl-10 text-sm text-gray-350 font-medium">PHONE</span>
               </div>
               <div className="flex sm:justify-start justify-end border-t border-gray-200 items-center">
-                <span className="sm:pr-10 my-2 sm:text-lg">908249274292</span>
+                <span className="sm:pr-10 my-2 sm:text-lg">{user.phone}</span>
               </div>
               <div className="flex border-t border-gray-200 items-center">
                 <span className="sm:pl-10 text-sm text-gray-350 font-medium">EMAIL</span>
               </div>
               <div className="flex sm:justify-start justify-end border-t border-gray-200 items-center">
-                <span className="sm:pr-10 my-2 sm:text-lg">xanthe.neal@gmail.com</span>
+                <span className="sm:pr-10 my-2 sm:text-lg">{user.email}</span>
               </div>
-              <div className="flex border-t sm:border-b-0 border-b border-gray-200 items-center">
-                <span className="sm:pl-10 text-sm text-gray-350 font-medium">PASSWORD</span>
-              </div>
-              <div className="flex sm:justify-start justify-end border-t sm:border-b-0 border-b border-gray-200 items-center">
-                <span className="sm:pr-10 my-2 sm:text-lg">************</span>
-              </div>
+              {user.domain === "local" && (
+                <>
+                  <div className="flex border-t sm:border-b-0 border-b border-gray-200 items-center">
+                    <span className="sm:pl-10 text-sm text-gray-350 font-medium">PASSWORD</span>
+                  </div>
+                  <div className="flex sm:justify-start justify-end border-t sm:border-b-0 border-b border-gray-200 items-center">
+                    <span className="sm:pr-10 my-2 sm:text-lg">************</span>
+                  </div>
+                </>
+              )}
             </div>
           </div>
           <div className="flex justify-between text-sm text-gray-350 mt-2 mb-4 sm:mx-0">
@@ -76,3 +80,9 @@ export default function HomePage() {
     </>
   );
 }
+
+const mapStateToProps = (state: any) => ({ user: state.user, isLoading: state.isLoading });
+
+const mapDispatchToProps = {};
+
+export default connect(mapStateToProps, mapDispatchToProps)(HomePage);
