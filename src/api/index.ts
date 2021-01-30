@@ -23,3 +23,9 @@ export function githubLogin(code: string) {
 export function localLogin(email: string, password: string) {
   return Axios.post("/api/user/login/local", { email, password });
 }
+export function localRegister(email: string, password: string) {
+  return Axios.post("/api/user/register", { email, password });
+}
+export function updateInfo(data: FormData) {
+  return Axios.post("/api/user/update", data);
+}

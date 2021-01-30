@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { facebookLogin, getInfo, githubLogin, googleLogin, localLogin } from "../api";
+import { facebookLogin, getInfo, githubLogin, googleLogin, localLogin, localRegister, updateInfo } from "../api";
 import { setLoading } from "./isLoadingReducer";
 
 export const userLocalLogin = createAsyncThunk(
@@ -9,6 +9,27 @@ export const userLocalLogin = createAsyncThunk(
     const res = await localLogin(email, password);
     dispatch(setLoading(false));
     if (res.data.success === false) return rejectWithValue(null);
+    return res.data;
+  }
+);
+
+export const userLocalRegister = createAsyncThunk(
+  "user/register",
+  async ({ email, password }: any, { dispatch, rejectWithValue }) => {
+    dispatch(setLoading(true));
+    const res = await localRegister(email, password);
+    dispatch(setLoading(false));
+    if (res.data.success === false) return rejectWithValue(null);
+    return res.data;
+  }
+);
+
+export const userUpdateInfo = createAsyncThunk(
+  "user/update",
+  async (form_data: FormData, { dispatch, rejectWithValue }) => {
+    dispatch(setLoading(true));
+    const res = await updateInfo(form_data);
+    if ((res.data.success = false)) return rejectWithValue(null);
     return res.data;
   }
 );
@@ -75,6 +96,10 @@ const UserSlice = createSlice({
       return payload.user;
     });
     builder.addCase(userLocalLogin.rejected, (state, { payload }) => {});
+    builder.addCase(userLocalRegister.fulfilled, (state, { payload }) => {
+      console.log("register successful");
+    });
+    builder.addCase(userLocalRegister.rejected, (state, { payload }) => {});
     builder.addCase(userGetInfo.fulfilled, (state, { payload }) => {
       return payload.user;
     });

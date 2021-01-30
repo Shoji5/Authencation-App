@@ -1,14 +1,20 @@
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import Logo from "../images/devchallenges.svg";
-import GoogleIcon from "../images/Google.svg";
-import FacebookIcon from "../images/Facebook.svg";
-import TwitterIcon from "../images/Twitter.svg";
-import GithubIcon from "../images/Gihub.svg";
-import { FormEvent } from "react";
+import { FormEvent, useEffect } from "react";
+import GoogleLogin from "../components/GoogleLogin";
+import FacebookLogin from "../components/FacebookLogin";
+import GithubLogin from "../components/GithubLogin";
+import { connect } from "react-redux";
+import { userLocalRegister } from "../stores/userReducer";
 
-export default function RegisterPage() {
+function RegisterPage({ user, userLocalRegister }: any) {
+  const history = useHistory();
+  useEffect(() => {
+    if (user.uid) history.push("/");
+  });
   const onSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    userLocalRegister({ email: e.currentTarget.email.value, password: e.currentTarget.password.value });
   };
 
   return (
@@ -49,10 +55,9 @@ export default function RegisterPage() {
           <div className="flex flex-col items-center mt-3">
             <p className="text-sm">or continue with these social profile</p>
             <div className="flex my-3">
-              <img className="mx-2" src={GoogleIcon} alt="" />
-              <img className="mx-2" src={FacebookIcon} alt="" />
-              <img className="mx-2" src={TwitterIcon} alt="" />
-              <img className="mx-2" src={GithubIcon} alt="" />
+              <GoogleLogin />
+              <FacebookLogin />
+              <GithubLogin />
             </div>
             <p className="text-sm mt-2">
               Adready a member?{" "}
@@ -70,3 +75,9 @@ export default function RegisterPage() {
     </div>
   );
 }
+
+const mapStateToProps = (state: any) => ({ user: state.user });
+
+const mapDispatchToProps = { userLocalRegister };
+
+export default connect(mapStateToProps, mapDispatchToProps)(RegisterPage);
