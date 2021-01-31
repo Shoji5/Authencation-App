@@ -2,6 +2,7 @@
   "name": "authencation",
   "version": "0.1.0",
   "private": true,
+  "homepage": "https://shoji5.github.io/Authencation-App/",
   "dependencies": {
     "@reduxjs/toolkit": "^1.5.0",
     "@testing-library/jest-dom": "^5.11.8",
@@ -30,6 +31,8 @@
     "web-vitals": "^0.2.4"
   },
   "scripts": {
+    "deploy": "gh-pages -d build",
+    "predeploy": "npm run build:css & npm run build",
     "watch:css": "npx postcss src/tailwind.css -o src/tailwind.output.css -w",
     "build:css": "npx postcss src/tailwind.css -o src/tailwind.output.css",
     "start": "react-scripts start",
