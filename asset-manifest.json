@@ -1,0 +1,27 @@
+{
+  "files": {
+    "main.css": "/Authencation-App/static/css/main.af781e04.chunk.css",
+    "main.js": "/Authencation-App/static/js/main.a7a99281.chunk.js",
+    "main.js.map": "/Authencation-App/static/js/main.a7a99281.chunk.js.map",
+    "runtime-main.js": "/Authencation-App/static/js/runtime-main.e0779ee4.js",
+    "runtime-main.js.map": "/Authencation-App/static/js/runtime-main.e0779ee4.js.map",
+    "static/css/2.a5804542.chunk.css": "/Authencation-App/static/css/2.a5804542.chunk.css",
+    "static/js/2.d709077d.chunk.js": "/Authencation-App/static/js/2.d709077d.chunk.js",
+    "static/js/2.d709077d.chunk.js.map": "/Authencation-App/static/js/2.d709077d.chunk.js.map",
+    "index.html": "/Authencation-App/index.html",
+    "static/css/2.a5804542.chunk.css.map": "/Authencation-App/static/css/2.a5804542.chunk.css.map",
+    "static/css/main.af781e04.chunk.css.map": "/Authencation-App/static/css/main.af781e04.chunk.css.map",
+    "static/js/2.d709077d.chunk.js.LICENSE.txt": "/Authencation-App/static/js/2.d709077d.chunk.js.LICENSE.txt",
+    "static/media/Facebook.1832314e.svg": "/Authencation-App/static/media/Facebook.1832314e.svg",
+    "static/media/Gihub.f020857c.svg": "/Authencation-App/static/media/Gihub.f020857c.svg",
+    "static/media/Google.c10671b3.svg": "/Authencation-App/static/media/Google.c10671b3.svg",
+    "static/media/devchallenges.87158787.svg": "/Authencation-App/static/media/devchallenges.87158787.svg"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.e0779ee4.js",
+    "static/css/2.a5804542.chunk.css",
+    "static/js/2.d709077d.chunk.js",
+    "static/css/main.af781e04.chunk.css",
+    "static/js/main.a7a99281.chunk.js"
+  ]
+}
