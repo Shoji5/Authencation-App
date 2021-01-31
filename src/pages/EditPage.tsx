@@ -1,13 +1,31 @@
-import React, { useEffect } from "react";
+import React, { FormEvent, MouseEvent, useEffect, useRef } from "react";
 import { connect } from "react-redux";
 import { Link, useHistory } from "react-router-dom";
 import Header from "../components/Header";
+import { userUpdateInfo } from "../stores/userReducer";
 
-function EditPage({ user, isLoading }: any) {
+function EditPage({ user, isLoading, userUpdateInfo }: any) {
   const history = useHistory();
+  const images = useRef<HTMLInputElement>(null);
   useEffect(() => {
     if (!user.uid && !isLoading) history.push("/login");
-  }, []);
+  });
+  const onSubmit = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const formdata = new FormData();
+    if (e.currentTarget.nameText.value.trim()) formdata.append("name", e.currentTarget.nameText.value);
+    if (e.currentTarget.bio.value.trim()) formdata.append("bio", e.currentTarget.bio.value);
+    if (e.currentTarget.number.value.trim()) formdata.append("phone", e.currentTarget.number.value);
+    if (e.currentTarget.email.value.trim()) formdata.append("email", e.currentTarget.email.value);
+    if (user.domain === "local" && e.currentTarget.password.value.trim())
+      formdata.append("password", e.currentTarget.password.value);
+    if (images.current?.files!.length! > 0) formdata.append("image", images.current?.files![0] as Blob);
+    userUpdateInfo(formdata);
+  };
+
+  const onClick = (e: MouseEvent<HTMLButtonElement>) => {
+    images.current?.click();
+  };
   return (
     <>
       <Header />
@@ -20,7 +38,8 @@ function EditPage({ user, isLoading }: any) {
             <h3 className="text-2xl">Change Info</h3>
             <p className="text-sm font-medium text-gray-450">Changes will be reflected to every services</p>
             <div className="mt-6 flex items-center">
-              <button className="relative mr-6 rounded-lg overflow-hidden">
+              <input type="file" ref={images} hidden />
+              <button className="relative mr-6 rounded-lg overflow-hidden" onClick={onClick}>
                 <img className="w-16 h-16 object-cover blur" src={user.image} alt="" />
                 <div className="absolute top-0 left-0 w-full h-full flex justify-center items-center rounded-lg bg-white bg-opacity-10 hover:bg-opacity-20 active:bg-opacity-30 transition-all">
                   <i className="fas fa-camera text-white text-xl"></i>
@@ -28,13 +47,13 @@ function EditPage({ user, isLoading }: any) {
               </button>
               <span className="text-sm text-gray-450 font-medium cursor-default">CHANGE PHOTO</span>
             </div>
-            <form>
+            <form onSubmit={onSubmit}>
               <label className="mt-5 text-sm block">
                 <span className="text-gray-600">Name</span>
                 <br />
                 <input
                   type="text"
-                  name="name"
+                  name="nameText"
                   placeholder="Enter your name..."
                   required
                   className="px-5 h-12 xl:w-96 lg:w-80 sm:w-72 w-full border border-gray-450 rounded-xl"
@@ -48,7 +67,6 @@ function EditPage({ user, isLoading }: any) {
                   rows={5}
                   name="bio"
                   placeholder="Enter your bio..."
-                  required
                   className="px-5 py-3 xl:w-96 lg:w-80 sm:w-72 w-full border border-gray-450 rounded-xl resize-none"
                   defaultValue={user.bio}
                 />
@@ -60,7 +78,6 @@ function EditPage({ user, isLoading }: any) {
                   type="number"
                   name="number"
                   placeholder="Enter your phone..."
-                  required
                   className="px-5 h-12 xl:w-96 lg:w-80 sm:w-72 w-full border border-gray-450 rounded-xl"
                   defaultValue={user.phone}
                 />
@@ -72,7 +89,6 @@ function EditPage({ user, isLoading }: any) {
                   type="email"
                   name="email"
                   placeholder="Enter your email..."
-                  required
                   className="px-5 h-12 xl:w-96 lg:w-80 sm:w-72 w-full border border-gray-450 rounded-xl"
                   defaultValue={user.email}
                 />
@@ -85,7 +101,6 @@ function EditPage({ user, isLoading }: any) {
                     type="password"
                     name="password"
                     placeholder="Enter your new password..."
-                    required
                     className="px-5 h-12 xl:w-96 lg:w-80 sm:w-72 w-full border border-gray-450 rounded-xl"
                   />
                 </label>
@@ -111,6 +126,6 @@ function EditPage({ user, isLoading }: any) {
 
 const mapStateToProps = (state: any) => ({ user: state.user, isLoading: state.isLoading });
 
-const mapDispatchToProps = {};
+const mapDispatchToProps = { userUpdateInfo };
 
 export default connect(mapStateToProps, mapDispatchToProps)(EditPage);

@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { facebookLogin, getInfo, githubLogin, googleLogin, localLogin, localRegister, updateInfo } from "../api";
 import { setLoading } from "./isLoadingReducer";
+import { setToast } from "../stores/toastReducer";
 
 export const userLocalLogin = createAsyncThunk(
   "user/loginLocal",
@@ -8,6 +9,7 @@ export const userLocalLogin = createAsyncThunk(
     dispatch(setLoading(true));
     const res = await localLogin(email, password);
     dispatch(setLoading(false));
+    dispatch(setToast(res.data));
     if (res.data.success === false) return rejectWithValue(null);
     return res.data;
   }
@@ -19,6 +21,7 @@ export const userLocalRegister = createAsyncThunk(
     dispatch(setLoading(true));
     const res = await localRegister(email, password);
     dispatch(setLoading(false));
+    dispatch(setToast(res.data));
     if (res.data.success === false) return rejectWithValue(null);
     return res.data;
   }
@@ -29,7 +32,9 @@ export const userUpdateInfo = createAsyncThunk(
   async (form_data: FormData, { dispatch, rejectWithValue }) => {
     dispatch(setLoading(true));
     const res = await updateInfo(form_data);
-    if ((res.data.success = false)) return rejectWithValue(null);
+    dispatch(setLoading(false));
+    dispatch(setToast(res.data));
+    if (res.data.success === false) return rejectWithValue(null);
     return res.data;
   }
 );
@@ -40,6 +45,7 @@ export const userFacebookLogin = createAsyncThunk(
     dispatch(setLoading(true));
     const res = await facebookLogin(access_token);
     dispatch(setLoading(false));
+    dispatch(setToast(res.data));
     if (res.data.success === false) return rejectWithValue(null);
     return res.data;
   }
@@ -52,6 +58,7 @@ export const userGoogleLogin = createAsyncThunk(
     console.log(access_token);
     const res = await googleLogin(access_token);
     dispatch(setLoading(false));
+    dispatch(setToast(res.data));
     if (res.data.success === false) return rejectWithValue(null);
     return res.data;
   }
@@ -63,6 +70,7 @@ export const userGithubLogin = createAsyncThunk(
     dispatch(setLoading(true));
     const res = await githubLogin(code);
     dispatch(setLoading(false));
+    dispatch(setToast(res.data));
     if (res.data.success === false) return rejectWithValue(null);
     return res.data;
   }
@@ -72,6 +80,7 @@ export const userGetInfo = createAsyncThunk("user/getInfo", async (args, { dispa
     dispatch(setLoading(true));
     const res = await getInfo();
     console.log(res);
+    dispatch(setToast(res.data));
     dispatch(setLoading(false));
     return res.data;
   } catch (err) {
@@ -106,6 +115,10 @@ const UserSlice = createSlice({
     builder.addCase(userGetInfo.rejected, (state, { payload }) => {
       console.log("wrong local token");
     });
+    builder.addCase(userUpdateInfo.fulfilled, (state, { payload }) => {
+      return payload.user;
+    });
+    builder.addCase(userUpdateInfo.rejected, (state, { payload }) => {});
     builder.addCase(userGoogleLogin.fulfilled, (state, { payload }) => {
       localStorage.setItem("token", payload.token);
       localStorage.setItem("refresh_token", payload.refresh_token);

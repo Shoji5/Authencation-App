@@ -7,6 +7,8 @@ import RegisterPage from "./pages/RegisterPage";
 import LoadingBar from "react-top-loading-bar";
 import { useEffect, useRef } from "react";
 import { userGetInfo } from "./stores/userReducer";
+import { ToastContainer, toast as Toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 type LoadingBarRef = {
   add(value: number): void;
@@ -16,12 +18,17 @@ type LoadingBarRef = {
   complete(): void;
 };
 
-function App({ isLoading, userGetInfo }: any) {
+function App({ isLoading, userGetInfo, toast }: any) {
   const loadingBar = useRef<LoadingBarRef>(null);
 
   useEffect(() => {
     userGetInfo();
   }, []);
+  useEffect(() => {
+    if (toast.first) return;
+    if (toast.success) Toast.success("successful!");
+    else Toast.error(toast.msg);
+  }, [toast]);
 
   useEffect(() => {
     if (isLoading) loadingBar.current?.continuousStart();
@@ -30,6 +37,17 @@ function App({ isLoading, userGetInfo }: any) {
 
   return (
     <Router>
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
       <LoadingBar ref={loadingBar} />
       <Switch>
         <Route path="/login" component={LoginPage} />
@@ -41,7 +59,7 @@ function App({ isLoading, userGetInfo }: any) {
   );
 }
 
-const mapStateToProps = (state: any) => ({ isLoading: state.isLoading });
+const mapStateToProps = (state: any) => ({ isLoading: state.isLoading, toast: state.toast });
 
 const mapDispatchToProps = { userGetInfo };
 
